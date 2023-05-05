@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.container {
+    @apply mx-auto px-4;
+}
+
+.bodyContainer{
+    min-height: calc(100vh - 4rem - 67px);
+}
+
+.bodyWhite{
+    @apply text-black bg-gray-200;
+}
+
+.bodyWhite_dark{
+    @apply dark:bg-gray-700 dark:text-white;
+}
+
+
