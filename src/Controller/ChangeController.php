@@ -8,14 +8,16 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Service\HttpClient\EntityHttpClient\ChangeApiHttpClient;
 use Symfony\Component\HttpFoundation\Request;
 use App\Form\ChangeType;
+use App\Service\HttpClient\EntityHttpClient\ChildrenApiHttpClient;
 
+#[Route('/changes')]
 class ChangeController extends AbstractController
 {
-    public function __construct(private ChangeApiHttpClient $ChangeApiHttpClient)
+    public function __construct(private ChangeApiHttpClient $ChangeApiHttpClient, private ChildrenApiHttpClient $childrenApiHttpClient)
     {
     }
 
-    #[Route('/Changes', name: 'get_Changes', methods: ['GET'])]
+    #[Route('/', name: 'get_Changes', methods: ['GET'])]
     public function index(): Response
     {
         $response = $this->ChangeApiHttpClient->getChangesByUser();
@@ -31,11 +33,17 @@ class ChangeController extends AbstractController
         ]);
     }
 
-    #[Route('/Changes/new', name: 'new_Changes', methods: ['POST', 'GET'])]
+    #[Route('/new', name: 'new_Changes', methods: ['POST', 'GET'])]
     public function new(Request $request): Response
     {
         $Change = [];
-        $form =  $this->createForm(ChangeType::class, $Change);
+        $children = $this->childrenApiHttpClient->getChildrensByUser()->getHydraMember();
+        $choices = [];
+        $choices["Choisi un enfant"] = null;
+        foreach($children as $child) {
+            $choices[$child["name"]] = $child['@id'];
+        }
+        $form =  $this->createForm(ChangeType::class, $Change, ['children' => $choices]);
 
         $form->handleRequest($request);
 
@@ -58,10 +66,10 @@ class ChangeController extends AbstractController
             }
         }
 
-        return $this->render('Changes/forms/form.html.twig', [
+        return $this->render('changes/form.html.twig', [
             'form' => $form->createView(),
             'buttonController' => 'Ajouter',
-            'titleController' => 'Ajouter un enfant'
+            'titleController' => 'Ajouter un change'
         ]);
     }
 

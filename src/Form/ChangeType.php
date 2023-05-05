@@ -5,13 +5,10 @@ namespace App\Form;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class ChangeType extends AbstractType
 {
@@ -41,20 +38,12 @@ class ChangeType extends AbstractType
                 ],
                 'label' => 'Type de change',
                 'multiple' => true,
+                'expanded' => true,
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Veuillez choisir un moment du repas',
                     ]),
                 ],
-            ])
-            ->add('products', ChoiceType::class, [
-                'choices' => [
-                    'Liniment' => 'LINIMENT',
-                    'Talc' => 'TALC',
-                    'Lingettes' => 'LINGETTES'
-                ],
-                'label' => 'Contenu',
-                'multiple' => true
             ])
             ->add('contenu', ChoiceType::class, [
                 'choices' => [
@@ -62,7 +51,18 @@ class ChangeType extends AbstractType
                     'Urine' => 'URINE'
                 ],
                 'label' => 'Contenu',
-                'multiple' => true
+                'multiple' => true,
+                'expanded' => true,
+            ])
+            ->add('products', ChoiceType::class, [
+                'choices' => [
+                    'Liniment' => 'LINIMENT',
+                    'Talc' => 'TALC',
+                    'Lingettes' => 'LINGETTES'
+                ],
+                'label' => 'Produits',
+                'multiple' => true,
+                'expanded' => true,
             ])
             ->add('problems', ChoiceType::class, [
                 'choices' => [
@@ -70,7 +70,8 @@ class ChangeType extends AbstractType
                     'Boutons' => 'BUTTON'
                 ],
                 'label' => 'Problèmes',
-                'multiple' => true
+                'multiple' => true,
+                'expanded' => true,
             ])
             ->add('commentaire', TextareaType::class, [
                 'label' => 'Commentaire'

@@ -15,4 +15,9 @@ class StructureType
         return $repas;
     }
 
+    public static function getChangesStructure(array $responseChanges): array
+    {
+        return $responseChanges;
+    }
+
 }

@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajout d'un change{% endblock %}
+
+{% block body %}
+    <main class="container bodyContainer" id="bodyContent">
+        <div class="mx-5">
+        {% include 'components/_alerts.html.twig' %}
+        </div>
+        <h1 class="text-3xl font-bold text-center">{{titleController}}</h1>
+        <div class="max-w-sm m-auto mt-5 p-4">
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <div class="text-center">
+        <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">{{buttonController}}</button>
+        </div>
+        {{ form_end(form)}}
+        </div>
+
+    </main>
+{% endblock %}
+
+{% block javascripts %}
+    {{parent()}}
+    {{ encore_entry_script_tags('form') }}
+{% endblock %}
