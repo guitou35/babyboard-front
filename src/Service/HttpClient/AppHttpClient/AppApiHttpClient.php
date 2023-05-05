@@ -68,9 +68,13 @@ class AppApiHttpClient extends BaseHttpClient
     {
         if ($accessToken = $this->requestStack->getSession()->get('accessToken')) {
             $dateNow = time();
-
+            $expiredTokenTimestamp = $this->getExpirationTokenTimeStamp($accessToken);
             // Request a new token if the validity of the current token is approaching the expiration date (< N minutes)
-            if ($dateNow > $this->getExpirationTokenTimeStamp($accessToken)) {
+            if ($dateNow > $expiredTokenTimestamp) {
+                if(ceil(($dateNow - $expiredTokenTimestamp) / 3600) >= 24){
+                    throw new CustomUserMessageAuthenticationException("Vous avez été déconnecté");
+
+                }
                 // Try to refresh token
                 $refreshTokenRequest = $this->authApi->refreshTokenRequest($this->requestStack->getSession()->get("refreshToken"));
                 $accessToken = $refreshTokenRequest["token"];
