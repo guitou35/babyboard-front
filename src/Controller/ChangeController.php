@@ -8,6 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Service\HttpClient\EntityHttpClient\ChangeApiHttpClient;
 use Symfony\Component\HttpFoundation\Request;
 use App\Form\ChangeType;
+use App\Helpers\Form\StructureType;
 use App\Service\HttpClient\EntityHttpClient\ChildrenApiHttpClient;
 
 #[Route('/changes')]
@@ -50,16 +51,11 @@ class ChangeController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
-            $json = [
-                'name' => $data['name'],
-                'birthdate' => $data['birthdate']->format('Y-m-d'),
-                'weight' => $data['weight'],
-                'size' => $data['size']
-            ];
+            $json = StructureType::setDatasChangesStructure($data);
             $response = $this->ChangeApiHttpClient->createChanges(['json' => $json]);
 
             if ($response->getStatus() === 201) {
-                $this->addFlash('success', 'Enfant ajouté avec succès');
+                $this->addFlash('success', 'Le change a été ajouté avec succès');
                 return $this->redirectToRoute('get_Changes');
             } else {
                 $this->addFlash('error', 'Une erreur est survenue');

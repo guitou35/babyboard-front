@@ -15,9 +15,17 @@ class StructureType
         return $repas;
     }
 
-    public static function getChangesStructure(array $responseChanges): array
+    public static function setDatasChangesStructure(array $responseChanges): array
     {
-        return $responseChanges;
+        return [
+            'children' => $responseChanges['children'],
+            'type' => $responseChanges['type'],
+            'heure' => $responseChanges['heure'],
+            'products' => $responseChanges['products'],
+            'contenu' => $responseChanges['contenu'],
+            'problems' => $responseChanges['problems'],
+            'commentaire' => $responseChanges['commentaire']
+        ];
     }
 
 }
