@@ -21,20 +21,23 @@ class ChangeController extends AbstractController
     #[Route('/', name: 'get_Changes', methods: ['GET'])]
     public function index(): Response
     {
-        $response = $this->ChangeApiHttpClient->getChangesByUser();
-        $Changes = [];
+        $options = ['query' => [
+            'groups[]' => 'read:item'
+        ]];
+        $response = $this->ChangeApiHttpClient->getChangesByUser($options);
+        $listChanges = [];
 
         if ($response->getStatus() === 200) {
-            $Changes = $response->getHydraMember();
+            $listChanges = $response->getHydraMember();
         }
 
-        return $this->render('Changes/index.html.twig', [
-            'Changes' => $Changes,
+        return $this->render('changes/index.html.twig', [
+            'listChanges' => $listChanges,
 
         ]);
     }
 
-    #[Route('/new', name: 'new_Changes', methods: ['POST', 'GET'])]
+    #[Route('/new', name: 'new_changes', methods: ['POST', 'GET'])]
     public function new(Request $request): Response
     {
         $Change = [];
@@ -69,11 +72,11 @@ class ChangeController extends AbstractController
         ]);
     }
 
-    #[Route('/Changes/edit/{id}', name: 'edit_Changes', methods: ['POST', 'GET'])]
+    #[Route('/edit/{id}', name: 'edit_changes', methods: ['POST', 'GET'])]
     public function edit(Request $request): Response
     {
         $Change = $this->ChangeApiHttpClient->getChangesById($request->get('id'))->getItemContent();
-        $Change['birthdate'] = new \Datetime($Change['birthdate']);
+        $Change['heure'] = new \Datetime($Change['heure']);
         $form =  $this->createForm(ChangeType::class, $Change);
 
         $form->handleRequest($request);
@@ -81,12 +84,7 @@ class ChangeController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
-            $json = [
-                'name' => $data['name'],
-                'birthdate' => $data['birthdate']->format('Y-m-d'),
-                'weight' => $data['weight'],
-                'size' => $data['size']
-            ];
+            $json = StructureType::setDatasChangesStructure($data);
             $response = $this->ChangeApiHttpClient->updateChanges(['json' => $json], $request->get('id'));
 
             if ($response->getStatus() === 200) {
@@ -97,14 +95,14 @@ class ChangeController extends AbstractController
             }
         }
 
-        return $this->render('Changes/forms/form.html.twig', [
+        return $this->render('changes/form.html.twig', [
             'form' => $form->createView(),
             'buttonController' => 'Modifier',
             'titleController' => 'Modifier un enfant'
         ]);
     }
 
-    #[Route('/Changes/delete/{id}', name: 'delete_Changes', methods: ['POST'])]
+    #[Route('/delete/{id}', name: 'delete_changes', methods: ['POST'])]
     public function delete(Request $request): Response
     {
         $response = $this->ChangeApiHttpClient->deleteChangesById($request->get('id'));

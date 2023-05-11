@@ -8,13 +8,13 @@ use App\Service\HttpClient\AppHttpClient\AppApiHttpClient;
 class ChangeApiHttpClient extends AppApiHttpClient
 {   
 
-    protected const CHANGE_URI = self::PREFIX. '/Changes';
+    protected const CHANGE_URI = self::PREFIX. '/changes';
 
-    public function getChangesByUser( string $groups = null): HttpResponse
+    public function getChangesByUser( array $groups = []): HttpResponse
     {
         $user = $this->getUser();
 
-        return $this->doRequest(self::GET, self::PREFIX . '/users/' . $user->getId() . '/Changes' );
+        return $this->doRequest(self::GET, self::PREFIX . '/users/' . $user->getId() . '/changes', $groups);
     }
 
     public function getChangesById($id, string $groups = null): HttpResponse

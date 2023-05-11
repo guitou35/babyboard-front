@@ -17,7 +17,7 @@ class GestionController extends AbstractController
         ],
         'Change' => [
             'name' => 'Ajouter un change',
-            'route' => 'new_Changes',
+            'route' => 'new_changes',
             'icon' => 'fa-solid fa-toilet fa-2x',
             'description' => 'Ajouter un change à un enfant, qui peut être un change de couche ou un change de vêtements',
         ],

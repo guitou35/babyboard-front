@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use DateTime;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
@@ -29,6 +30,7 @@ class ChangeType extends AbstractType
             ->add('heure', DateTimeType::class, [
                 'label' => 'Jour et heure du change',
                 'required' => true,
+                'data' => new DateTime()
             ])
             ->add('type', ChoiceType::class, [
                 'choices' => [
@@ -37,8 +39,7 @@ class ChangeType extends AbstractType
                     'Toilette' => 'TOILETTE'
                 ],
                 'label' => 'Type de change',
-                'multiple' => true,
-                'expanded' => true,
+                'multiple' => false,
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Veuillez choisir un moment du repas',
